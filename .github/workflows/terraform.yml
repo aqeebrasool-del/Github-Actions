@@ -1,0 +1,107 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+
+
+jobs:
+
+  terraform:
+    name: Terraform Scan, Plan & Apply
+    runs-on: ubuntu-latest
+
+    # PR merge hone ke baad main par push:
+    # APPLY chalega
+    #
+    # Feature branch push:
+    # PLAN chalega
+    #
+    # Normal main push bhi APPLY karega
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+    steps:
+
+      # ------------------------------------------------
+      # 1. Checkout Code
+      # ------------------------------------------------
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+
+      # ------------------------------------------------
+      # 2. Setup Terraform
+      # ------------------------------------------------
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+
+      # ------------------------------------------------
+      # 3. Terraform Init
+      # ------------------------------------------------
+      - name: Terraform Init
+        working-directory: ./environments/dev
+        run: terraform init
+
+
+      # ------------------------------------------------
+      # 4. Terraform Format Check
+      # ------------------------------------------------
+      - name: Terraform Format Check
+        working-directory: .
+        run: terraform fmt -check -recursive
+
+
+      # ------------------------------------------------
+      # 5. Terraform Validate
+      # ------------------------------------------------
+      - name: Terraform Validate
+        working-directory: ./environments/dev
+        run: terraform validate
+
+
+      # ------------------------------------------------
+      # 6. Security Scan - tfsec
+      # ------------------------------------------------
+      - name: Terraform Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: false
+
+
+      # ------------------------------------------------
+      # 7. Terraform Plan
+      # ------------------------------------------------
+      - name: Terraform Plan
+        working-directory: ./environments/dev
+        run: terraform plan -out=tfplan
+
+
+      # ------------------------------------------------
+      # 8. Terraform Apply
+      # ------------------------------------------------
+      # Apply ONLY when code is on main branch
+      #
+      # Feature branch:
+      #     Scan + Plan
+      #
+      # Main branch:
+      #     Scan + Plan + Apply
+      # ------------------------------------------------
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: ./environments/dev
+        run: terraform apply -auto-approve tfplan

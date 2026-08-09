@@ -17,14 +17,14 @@ resource "azurerm_network_interface" "nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "vms" {
-  for_each            = var.virtual_machine
-  name                = each.value.vm_name
-  resource_group_name = each.value.resource_group_name
-  location            = each.value.location
-  size                = each.value.size
-  admin_username      = each.value.admin_username
-  admin_password      = each.value.admin_password
-  disable_password_authentication= each.value.disable_password_authentication
+  for_each                        = var.virtual_machine
+  name                            = each.value.vm_name
+  resource_group_name             = each.value.resource_group_name
+  location                        = each.value.location
+  size                            = each.value.size
+  admin_username                  = each.value.admin_username
+  admin_password                  = each.value.admin_password
+  disable_password_authentication = each.value.disable_password_authentication
   network_interface_ids = [
     azurerm_network_interface.nic[each.key].id,
   ]
