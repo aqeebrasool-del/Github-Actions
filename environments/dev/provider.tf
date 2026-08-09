@@ -5,13 +5,13 @@ terraform {
       version = "4.80.0"
     }
   }
-  # backend "azurerm" {
-  #   resource_group_name  = "rg-test"
-  #   storage_account_name = "aqibstorageaccount221122"
-  #   container_name       = "aqibcontainer11221122"
-  #   key                  = "dev.tfstate"
+  backend "azurerm" {
+    resource_group_name  = "rg-test"
+    storage_account_name = "aqibstorageaccount1212"
+    container_name       = "aqibcontainer"
+    key                  = "dev.tfstate"
 
-  # }
+  }
 }
 
 provider "azurerm" {
