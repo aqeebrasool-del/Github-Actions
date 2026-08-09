@@ -31,4 +31,3 @@ module "virtual_machine" {
   depends_on      = [module.public_ip, module.subnets]
   virtual_machine = var.virtual_machine
 }
-
