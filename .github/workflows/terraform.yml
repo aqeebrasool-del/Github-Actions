@@ -53,7 +53,7 @@ jobs:
       # 3. Terraform Init
       # ------------------------------------------------
       - name: Terraform Init
-        working-directory: .
+        working-directory: ./environments/dev
         run: terraform init
 
 
@@ -69,7 +69,7 @@ jobs:
       # 5. Terraform Validate
       # ------------------------------------------------
       - name: Terraform Validate
-        working-directory: .
+        working-directory: ./environments/dev
         run: terraform validate
 
 
@@ -86,7 +86,7 @@ jobs:
       # 7. Terraform Plan
       # ------------------------------------------------
       - name: Terraform Plan
-        working-directory: .
+        working-directory: ./environments/dev
         run: terraform plan -out=tfplan
 
 
@@ -103,5 +103,5 @@ jobs:
       # ------------------------------------------------
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        working-directory: .
+        working-directory: ./environments/dev
         run: terraform apply -auto-approve tfplan
