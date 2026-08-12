@@ -10,7 +10,7 @@ terraform {
     storage_account_name = "aqibstorageaccount1212"
     container_name       = "aqibcontainer"
     key                  = "dev.tfstate"
-
+ use_azuread_auth = true
   }
 }
 
