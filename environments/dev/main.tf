@@ -19,15 +19,15 @@ module "subnets" {
 }
 
 
-module "public_ip" {
-  source     = "../../modules/azurerm_public_ip"
-  depends_on = [module.resource_group]
-  public_ip  = var.public_ip
+# module "public_ip" {
+#   source     = "../../modules/azurerm_public_ip"
+#   depends_on = [module.resource_group]
+#   public_ip  = var.public_ip
 
-}
+# }
 
-module "virtual_machine" {
-  source          = "../../modules/azurerm_virtual_machine"
-  depends_on      = [module.public_ip, module.subnets]
-  virtual_machine = var.virtual_machine
-}
+# module "virtual_machine" {
+#   source          = "../../modules/azurerm_virtual_machine"
+#   depends_on      = [module.public_ip, module.subnets]
+#   virtual_machine = var.virtual_machine
+# }
