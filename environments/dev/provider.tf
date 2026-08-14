@@ -7,8 +7,8 @@ terraform {
   }
     backend "azurerm" {
       resource_group_name  = "rg-test"
-      storage_account_name = "aqibstorageaccount1212"
-      container_name       = "aqibcontainer"
+      storage_account_name = "aqibstorageaccount786"
+      container_name       = "storageaccountcontainer786"
       key                  = "dev.tfstate"
    use_azuread_auth = true
     }
